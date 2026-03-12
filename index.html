@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔮 Oracle AI — Apna Future Jaano</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #d4af37;
+  --gold-light: #f0d060;
+  --gold-dim: #8a7020;
+  --deep: #04030a;
+  --void: #060412;
+  --nebula: #100828;
+  --cosmic: #1a0a3a;
+  --star: #fffbe6;
+  --rose: #c0406a;
+  --rose-light: #e8698a;
+  --teal: #2ab8b0;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--void);
+  min-height: 100vh;
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--star);
+  overflow-x: hidden;
+}
+
+/* STARFIELD */
+#starfield { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.star {
+  position:absolute; border-radius:50%; background:white;
+  animation: twinkle var(--d) ease-in-out infinite alternate;
+  animation-delay: var(--delay);
+}
+@keyframes twinkle {
+  from { opacity:var(--min-o); transform:scale(1); }
+  to   { opacity:1; transform:scale(1.5); }
+}
+
+/* NEBULA */
+.nb { position:fixed; border-radius:50%; filter:blur(90px); pointer-events:none; z-index:0; }
+.nb1 { width:600px;height:600px;background:radial-gradient(circle,rgba(70,15,150,0.3),transparent 70%);top:-150px;left:-150px;animation:nbdrift 20s ease-in-out infinite alternate; }
+.nb2 { width:450px;height:450px;background:radial-gradient(circle,rgba(180,60,10,0.18),transparent 70%);bottom:-100px;right:-100px;animation:nbdrift2 25s ease-in-out infinite alternate; }
+.nb3 { width:350px;height:350px;background:radial-gradient(circle,rgba(180,30,80,0.12),transparent 70%);top:40%;left:30%;animation:nbdrift3 18s ease-in-out infinite alternate; }
+@keyframes nbdrift  { to { transform:translate(80px,100px); } }
+@keyframes nbdrift2 { to { transform:translate(-80px,-80px); } }
+@keyframes nbdrift3 { to { transform:translate(40px,-60px) scale(1.2); } }
+
+/* MAIN WRAP */
+.app { position:relative; z-index:1; max-width:700px; margin:0 auto; padding:32px 16px 80px; }
+
+/* HEADER */
+.header { text-align:center; margin-bottom:32px; }
+.logo-wrap { position:relative; width:90px; height:90px; margin:0 auto 20px; }
+.logo-orb {
+  width:90px; height:90px; border-radius:50%;
+  background: radial-gradient(circle at 35% 32%, #9060ff, #1a0560 60%, #020108);
+  box-shadow: 0 0 40px 12px rgba(110,50,255,0.5), inset 0 0 25px rgba(255,255,255,0.06);
+  display:flex; align-items:center; justify-content:center;
+  font-size:38px;
+  animation: orb-breathe 3s ease-in-out infinite alternate;
+}
+@keyframes orb-breathe {
+  from { box-shadow:0 0 40px 12px rgba(110,50,255,0.5); }
+  to   { box-shadow:0 0 70px 25px rgba(140,70,255,0.7); }
+}
+.logo-ring {
+  position:absolute; inset:-10px; border-radius:50%;
+  border:1px solid rgba(212,175,55,0.45);
+  animation:spin 9s linear infinite;
+}
+.logo-ring::before, .logo-ring::after {
+  content:''; position:absolute; width:7px; height:7px;
+  background:var(--gold); border-radius:50%;
+  box-shadow:0 0 8px var(--gold);
+}
+.logo-ring::before { top:3px; left:50%; transform:translateX(-50%); }
+.logo-ring::after  { bottom:3px; left:50%; transform:translateX(-50%); }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+h1 {
+  font-family:'Cinzel Decorative',cursive;
+  font-size:clamp(1.3rem,5vw,1.9rem);
+  color:var(--gold);
+  text-shadow:0 0 30px rgba(212,175,55,0.55);
+  letter-spacing:.05em;
+}
+.tagline {
+  font-style:italic; font-size:.9rem;
+  color:rgba(255,251,230,0.4); letter-spacing:.12em; margin-top:6px;
+}
+
+/* TABS */
+.tabs {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:0; margin-bottom:28px;
+  border:1px solid rgba(212,175,55,0.2);
+  border-radius:2px; overflow:hidden;
+}
+.tab-btn {
+  padding:14px 8px; background:rgba(255,255,255,0.02);
+  border:none; color:rgba(255,251,230,0.4);
+  font-family:'Cinzel Decorative',cursive;
+  font-size:.5rem; letter-spacing:.12em;
+  cursor:pointer; transition:all .3s;
+  border-right:1px solid rgba(212,175,55,0.15);
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+}
+.tab-btn:last-child { border-right:none; }
+.tab-btn .tab-icon { font-size:1.3rem; }
+.tab-btn.active {
+  background:rgba(212,175,55,0.1);
+  color:var(--gold);
+  box-shadow:inset 0 -2px 0 var(--gold);
+}
+.tab-btn:hover:not(.active) { background:rgba(212,175,55,0.05); color:rgba(255,251,230,0.7); }
+
+/* PANEL */
+.panel { display:none; }
+.panel.active { display:block; animation:fadein .4s ease; }
+@keyframes fadein { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* CARD */
+.card {
+  background:linear-gradient(135deg,rgba(22,8,52,0.88),rgba(6,4,18,0.92));
+  border:1px solid rgba(212,175,55,0.18);
+  border-radius:2px; padding:36px 32px;
+  backdrop-filter:blur(14px);
+  box-shadow:0 8px 60px rgba(0,0,0,0.65), inset 0 1px 0 rgba(212,175,55,0.08);
+  position:relative;
+}
+.card::before { content:'✦'; position:absolute; top:12px; left:14px; color:var(--gold); font-size:9px; opacity:.5; }
+.card::after  { content:'✦'; position:absolute; bottom:12px; right:14px; color:var(--gold); font-size:9px; opacity:.5; }
+
+/* FORM ELEMENTS */
+.field { margin-bottom:22px; }
+label {
+  display:block;
+  font-family:'Cinzel Decorative',cursive;
+  font-size:.55rem; letter-spacing:.2em;
+  color:var(--gold-dim); text-transform:uppercase; margin-bottom:9px;
+}
+input, select {
+  width:100%;
+  background:rgba(255,255,255,0.035);
+  border:1px solid rgba(212,175,55,0.22);
+  border-radius:1px; padding:13px 16px;
+  color:var(--star);
+  font-family:'Cormorant Garamond',serif; font-size:1rem;
+  outline:none; transition:all .3s;
+}
+input::placeholder { color:rgba(255,251,230,0.22); font-style:italic; }
+input:focus, select:focus {
+  border-color:rgba(212,175,55,0.55);
+  background:rgba(212,175,55,0.04);
+  box-shadow:0 0 18px rgba(212,175,55,0.1);
+}
+select option { background:#10062a; }
+.row2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+/* PROGRESS */
+.prog-bar { width:100%; height:2px; background:rgba(212,175,55,0.1); margin-bottom:28px; border-radius:2px; overflow:hidden; }
+.prog-fill { height:100%; background:var(--gold); box-shadow:0 0 8px var(--gold); transition:width .5s ease; }
+.dots { display:flex; justify-content:center; gap:8px; margin-bottom:28px; }
+.dot { width:8px;height:8px;border-radius:50%; background:rgba(212,175,55,0.18); border:1px solid rgba(212,175,55,0.28); transition:all .4s; }
+.dot.on { background:var(--gold); box-shadow:0 0 8px var(--gold); }
+
+/* BUTTONS */
+.btn {
+  width:100%; padding:16px;
+  background:linear-gradient(135deg,#7a5010,#d4af37 50%,#7a5010);
+  background-size:200% 100%;
+  border:none; border-radius:1px;
+  color:#04030a;
+  font-family:'Cinzel Decorative',cursive;
+  font-size:.65rem; letter-spacing:.18em;
+  cursor:pointer; transition:all .35s; margin-top:8px;
+}
+.btn:hover { background-position:right; box-shadow:0 0 28px rgba(212,175,55,0.4); transform:translateY(-1px); }
+.btn:active { transform:translateY(1px); }
+.btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+.btn-outline {
+  background:transparent; border:1px solid rgba(212,175,55,0.28);
+  color:var(--gold-dim); margin-top:10px; font-size:.58rem; padding:12px;
+}
+.btn-outline:hover { background:rgba(212,175,55,0.06); box-shadow:none; }
+
+/* ROSE BUTTON for compatibility */
+.btn-rose {
+  background:linear-gradient(135deg,#7a1535,#c0406a 50%,#7a1535);
+  background-size:200% 100%; color:white;
+}
+.btn-rose:hover { background-position:right; box-shadow:0 0 28px rgba(192,64,106,0.45); }
+
+/* DIVIDER */
+.divider {
+  display:flex; align-items:center; gap:14px;
+  margin:24px 0; color:rgba(212,175,55,0.3); font-size:.7rem; letter-spacing:.15em;
+}
+.divider::before,.divider::after { content:''; flex:1; height:1px; background:linear-gradient(to right,transparent,rgba(212,175,55,0.22),transparent); }
+
+/* LOADING */
+.loading { display:none; flex-direction:column; align-items:center; gap:20px; padding:40px 0; }
+.loading.show { display:flex; }
+.spin-orb {
+  width:65px;height:65px; border-radius:50%;
+  border:2px solid rgba(212,175,55,0.15); border-top-color:var(--gold);
+  animation:spin 1s linear infinite; position:relative;
+}
+.spin-orb::before { content:'🔮'; position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;animation:spin 1s linear infinite reverse; }
+.load-txt { font-style:italic; font-size:.95rem; color:rgba(255,251,230,0.45); transition:opacity .4s; }
+
+/* RESULT */
+.result { display:none; }
+.result.show { display:block; animation:fadein .7s ease; }
+.result-hero { text-align:center; margin-bottom:28px; }
+.result-name { font-family:'Cinzel Decorative',cursive; font-size:1.5rem; color:var(--gold); text-shadow:0 0 20px rgba(212,175,55,0.5); }
+.result-sub  { font-style:italic; font-size:.88rem; color:rgba(255,251,230,0.38); letter-spacing:.1em; margin-top:4px; }
+
+.stars-row { display:flex; gap:5px; justify-content:center; margin:16px 0 24px; }
+.stars-row span { font-size:1.3rem; animation:star-pop .4s ease backwards; }
+@keyframes star-pop { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+
+.pred-block { margin-bottom:24px; }
+.pred-label {
+  font-family:'Cinzel Decorative',cursive; font-size:.52rem;
+  letter-spacing:.22em; color:var(--gold-dim); text-transform:uppercase;
+  margin-bottom:9px; display:flex; align-items:center; gap:10px;
+}
+.pred-label::after { content:''; flex:1; height:1px; background:rgba(212,175,55,0.14); }
+.pred-text {
+  font-size:1rem; line-height:1.85; color:rgba(255,251,230,0.82);
+  font-style:italic; padding:14px 18px;
+  background:rgba(212,175,55,0.04);
+  border-left:2px solid rgba(212,175,55,0.28);
+}
+
+.lucky-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:8px; }
+.lucky-card {
+  text-align:center; padding:14px 6px;
+  background:rgba(212,175,55,0.05);
+  border:1px solid rgba(212,175,55,0.13); border-radius:1px;
+}
+.lucky-card .le { font-size:1.3rem; display:block; margin-bottom:4px; }
+.lucky-card .ll { font-size:.6rem; color:rgba(255,251,230,0.3); letter-spacing:.08em; display:block; }
+.lucky-card .lv { font-size:.88rem; color:var(--gold-light); }
+
+/* ── HOROSCOPE PANEL ── */
+.zodiac-grid {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:24px;
+}
+.zodiac-btn {
+  padding:14px 6px; background:rgba(255,255,255,0.03);
+  border:1px solid rgba(212,175,55,0.15); border-radius:1px;
+  cursor:pointer; transition:all .25s; text-align:center;
+  font-family:'Cormorant Garamond',serif; color:rgba(255,251,230,0.55);
+  font-size:.85rem;
+}
+.zodiac-btn .zs { font-size:1.6rem; display:block; margin-bottom:4px; }
+.zodiac-btn:hover { background:rgba(212,175,55,0.07); color:var(--gold); border-color:rgba(212,175,55,0.35); }
+.zodiac-btn.selected { background:rgba(212,175,55,0.12); color:var(--gold); border-color:rgba(212,175,55,0.5); box-shadow:0 0 14px rgba(212,175,55,0.15); }
+
+.horo-result { display:none; }
+.horo-result.show { display:block; animation:fadein .6s ease; }
+.horo-sign-header { display:flex; align-items:center; gap:16px; margin-bottom:24px; }
+.horo-sign-big { font-size:3rem; }
+.horo-sign-info h3 { font-family:'Cinzel Decorative',cursive; font-size:1.1rem; color:var(--gold); }
+.horo-sign-info p  { font-size:.85rem; color:rgba(255,251,230,0.38); font-style:italic; margin-top:2px; }
+
+.horo-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px; }
+.horo-meter-card {
+  padding:16px; background:rgba(255,255,255,0.03);
+  border:1px solid rgba(212,175,55,0.13); border-radius:1px;
+}
+.horo-meter-label { font-size:.7rem; color:rgba(255,251,230,0.4); letter-spacing:.1em; margin-bottom:8px; }
+.horo-meter-bar { height:4px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden; margin-bottom:6px; }
+.horo-meter-fill { height:100%; border-radius:2px; transition:width 1s ease; }
+.fill-gold  { background:linear-gradient(to right,var(--gold-dim),var(--gold)); box-shadow:0 0 6px var(--gold); }
+.fill-rose  { background:linear-gradient(to right,#7a1535,var(--rose)); box-shadow:0 0 6px var(--rose); }
+.fill-teal  { background:linear-gradient(to right,#0a5550,var(--teal)); box-shadow:0 0 6px var(--teal); }
+.fill-purple{ background:linear-gradient(to right,#3a0870,#9040e0); box-shadow:0 0 6px #9040e0; }
+.horo-meter-val { font-size:.9rem; color:var(--gold-light); text-align:right; }
+
+/* ── COMPATIBILITY PANEL ── */
+.compat-result { display:none; }
+.compat-result.show { display:block; animation:fadein .7s ease; }
+
+.compat-score-wrap { text-align:center; margin:28px 0; }
+.compat-circle {
+  width:120px; height:120px; border-radius:50%; margin:0 auto 16px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  border:2px solid rgba(192,64,106,0.4);
+  background:radial-gradient(circle at 35% 35%, rgba(192,64,106,0.25), rgba(10,3,25,0.9));
+  box-shadow:0 0 40px rgba(192,64,106,0.3);
+  animation:orb-breathe 3s ease-in-out infinite alternate;
+}
+@keyframes rose-breathe {
+  from { box-shadow:0 0 30px rgba(192,64,106,0.3); }
+  to   { box-shadow:0 0 60px rgba(192,64,106,0.55); }
+}
+.compat-pct { font-family:'Cinzel Decorative',cursive; font-size:2rem; color:var(--rose-light); line-height:1; }
+.compat-pct-label { font-size:.6rem; color:rgba(255,251,230,0.4); letter-spacing:.12em; margin-top:3px; }
+.compat-verdict { font-family:'Cinzel Decorative',cursive; font-size:1rem; color:var(--rose-light); margin-bottom:6px; }
+.compat-verdict-sub { font-style:italic; font-size:.88rem; color:rgba(255,251,230,0.4); }
+
+.compat-bars { display:flex; flex-direction:column; gap:12px; margin:20px 0; }
+.cbar-row { display:flex; align-items:center; gap:12px; }
+.cbar-label { width:90px; font-size:.75rem; color:rgba(255,251,230,0.45); letter-spacing:.06em; flex-shrink:0; }
+.cbar-track { flex:1; height:5px; background:rgba(255,255,255,0.07); border-radius:3px; overflow:hidden; }
+.cbar-fill { height:100%; border-radius:3px; background:linear-gradient(to right,#7a1535,var(--rose-light)); box-shadow:0 0 6px rgba(192,64,106,0.5); transition:width 1.2s ease; }
+.cbar-pct { width:36px; text-align:right; font-size:.8rem; color:var(--rose-light); flex-shrink:0; }
+
+.names-vs {
+  display:flex; align-items:center; justify-content:center;
+  gap:16px; margin-bottom:20px; font-family:'Cinzel Decorative',cursive;
+}
+.name-tag { font-size:1rem; color:var(--gold); }
+.vs-badge { font-size:1.2rem; color:var(--rose); text-shadow:0 0 12px rgba(192,64,106,0.6); }
+
+@media(max-width:480px){
+  .card{padding:24px 16px}
+  .row2{grid-template-columns:1fr}
+  .lucky-grid{grid-template-columns:repeat(2,1fr)}
+  .horo-grid{grid-template-columns:1fr}
+  .zodiac-grid{grid-template-columns:repeat(3,1fr)}
+  .tab-btn{font-size:.42rem; padding:12px 4px}
+}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px}
+</style>
+</head>
+<body>
+
+<div id="starfield"></div>
+<div class="nb nb1"></div>
+<div class="nb nb2"></div>
+<div class="nb nb3"></div>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-wrap">
+      <div class="logo-orb">🔮</div>
+      <div class="logo-ring"></div>
+    </div>
+    <h1>Oracle AI</h1>
+    <p class="tagline">✦ &nbsp; Tere Future ka Raaz Khulega &nbsp; ✦</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('future')">
+      <span class="tab-icon">🔮</span>Mera Future
+    </button>
+    <button class="tab-btn" onclick="switchTab('horoscope')">
+      <span class="tab-icon">🌙</span>Rashifal
+    </button>
+    <button class="tab-btn" onclick="switchTab('compat')">
+      <span class="tab-icon">💑</span>Love Match
+    </button>
+  </div>
+
+  <!-- ════════════════════════════════════
+       PANEL 1: FUTURE PREDICTOR
+  ════════════════════════════════════ -->
+  <div id="panel-future" class="panel active">
+    <div class="card">
+
+      <!-- Step 1 -->
+      <div id="fp-s1">
+        <div class="prog-bar"><div class="prog-fill" style="width:33%"></div></div>
+        <div class="dots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="field"><label>Apna Poora Naam</label><input id="fp-name" type="text" placeholder="Naam likho yahan…" maxlength="50"/></div>
+        <div class="row2">
+          <div class="field"><label>Janam Tithi (Date of Birth)</label><input id="fp-dob" type="date"/></div>
+          <div class="field"><label>Gender</label>
+            <select id="fp-gender">
+              <option value="">Chuno…</option>
+              <option>Male</option><option>Female</option><option>Non-binary</option><option>Batana nahi</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn" onclick="fpGo2()">Aage Badho → Safar Shuru</button>
+      </div>
+
+      <!-- Step 2 -->
+      <div id="fp-s2" style="display:none">
+        <div class="prog-bar"><div class="prog-fill" style="width:66%"></div></div>
+        <div class="dots"><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+        <div class="field"><label>Sabse Bada Sapna kya hai tumhara?</label>
+          <select id="fp-q1"><option value="">Chuno…</option>
+            <option value="wealth and financial freedom">💰 Paise aur financial freedom</option>
+            <option value="deep love and soulmate connection">💗 Sachcha Pyaar aur Soulmate</option>
+            <option value="fame and recognition">🌟 Fame aur Pehchaan</option>
+            <option value="peace and spiritual awakening">🕊️ Sukoon aur Spiritual Growth</option>
+            <option value="adventure and world travel">✈️ Adventure aur Duniya Ghumna</option>
+          </select>
+        </div>
+        <div class="field"><label>Konsa Element tumhari Soul ko Suit karta hai?</label>
+          <select id="fp-q2"><option value="">Chuno…</option>
+            <option value="Fire — passionate and bold">🔥 Aag — Jazbati aur Daring</option>
+            <option value="Water — deep and emotional">💧 Paani — Gehre Ehsaas wala</option>
+            <option value="Earth — grounded and stable">🌿 Mitti — Stable aur Reliable</option>
+            <option value="Air — free and intellectual">💨 Hawa — Azaad aur Smart</option>
+          </select>
+        </div>
+        <div class="field"><label>Abhi Sabse Badi Problem kya hai Zindagi mein?</label>
+          <select id="fp-q3"><option value="">Chuno…</option>
+            <option value="finding my true purpose">🎯 Apna Asli Maqsad Dhundhna</option>
+            <option value="financial struggles">💸 Paise ki Takleef</option>
+            <option value="relationship problems">💔 Rishton ki Mushkilein</option>
+            <option value="lack of confidence">😟 Self-Confidence ki Kami</option>
+            <option value="career confusion">🤔 Career mein Confusion</option>
+          </select>
+        </div>
+        <button class="btn" onclick="fpGo3()">Meri Destiny Batao ✦</button>
+        <button class="btn btn-outline" onclick="fpBack1()">← Wapas Jao</button>
+      </div>
+
+      <!-- Step 3: Loading + Result -->
+      <div id="fp-s3" style="display:none">
+        <div class="loading show" id="fp-loading">
+          <div class="spin-orb"></div>
+          <div class="load-txt" id="fp-load-txt">Cosmic Oracle se pooch rahe hain…</div>
+        </div>
+        <div class="result" id="fp-result">
+          <div class="result-hero">
+            <div class="result-name" id="fp-r-name"></div>
+            <div class="result-sub">Tera Cosmic Blueprint Reveal Ho Gaya!</div>
+          </div>
+          <div class="stars-row" id="fp-stars"></div>
+          <div class="pred-block"><div class="pred-label">💫 Zindagi ka Raasta</div><div class="pred-text" id="fp-r-life"></div></div>
+          <div class="pred-block"><div class="pred-label">💰 Career & Paise</div><div class="pred-text" id="fp-r-career"></div></div>
+          <div class="pred-block"><div class="pred-label">💗 Pyaar & Rishte</div><div class="pred-text" id="fp-r-love"></div></div>
+          <div class="pred-block"><div class="pred-label">⚠️ Cosmic Warning — Dhyan Rakhna!</div><div class="pred-text" id="fp-r-warn"></div></div>
+          <div class="pred-block">
+            <div class="pred-label">🍀 Lucky Cheezein</div>
+            <div class="lucky-grid" id="fp-lucky"></div>
+          </div>
+          <div class="divider">Doston ko Dikhao</div>
+          <button class="btn" onclick="shareResult()">📤 &nbsp;Apna Future Share Karo</button>
+          <button class="btn btn-outline" onclick="fpReset()">✦ &nbsp;Dobara Try Karo</button>
+          <p style="text-align:center;font-size:.75rem;font-style:italic;color:rgba(255,251,230,0.28);margin-top:16px;letter-spacing:.08em">Sirf Timepass ke liye hai · Stars kehte hain, tum decide karo 😄</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       PANEL 2: DAILY HOROSCOPE
+  ════════════════════════════════════ -->
+  <div id="panel-horoscope" class="panel">
+    <div class="card">
+      <div class="pred-label" style="margin-bottom:20px">🌙 Apni Rashi Chuno</div>
+      <div class="zodiac-grid" id="zodiac-grid"></div>
+
+      <div class="loading" id="horo-loading">
+        <div class="spin-orb"></div>
+        <div class="load-txt" id="horo-load-txt">Tumhari Rashi ka Raaz Nikaal rahe hain…</div>
+      </div>
+
+      <div class="horo-result" id="horo-result">
+        <div class="horo-sign-header">
+          <div class="horo-sign-big" id="hr-emoji"></div>
+          <div class="horo-sign-info">
+            <h3 id="hr-sign"></h3>
+            <p id="hr-date-range"></p>
+          </div>
+        </div>
+
+        <div class="horo-grid" id="hr-meters"></div>
+
+        <div class="pred-block"><div class="pred-label">⭐ Aaj ka Haal</div><div class="pred-text" id="hr-today"></div></div>
+        <div class="pred-block"><div class="pred-label">💡 Sitaron ki Salah</div><div class="pred-text" id="hr-advice"></div></div>
+
+        <div class="lucky-grid" id="hr-lucky" style="grid-template-columns:repeat(3,1fr)"></div>
+
+        <div style="margin-top:20px">
+          <button class="btn" onclick="resetHoro()">← Doosri Rashi Dekho</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       PANEL 3: COMPATIBILITY
+  ════════════════════════════════════ -->
+  <div id="panel-compat" class="panel">
+    <div class="card">
+      <div class="pred-label" style="margin-bottom:4px">💑 Love Compatibility — Kitna Match Ho?</div>
+      <p style="font-style:italic;font-size:.88rem;color:rgba(255,251,230,0.38);margin-bottom:24px">Dono ke Naam aur Janam Tithi likho, love match pata chalega!</p>
+
+      <div id="cp-form">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <div style="text-align:center;font-size:1.4rem;margin-bottom:12px">💛</div>
+            <div class="field"><label>Pehle Insaan ka Naam</label><input id="cp-n1" type="text" placeholder="Apna naam…" maxlength="30"/></div>
+            <div class="field"><label>Date of Birth</label><input id="cp-d1" type="date"/></div>
+            <div class="field"><label>Rashi (optional)</label>
+              <select id="cp-z1"><option value="">Auto-detect</option>
+                <option>Aries ♈</option><option>Taurus ♉</option><option>Gemini ♊</option><option>Cancer ♋</option>
+                <option>Leo ♌</option><option>Virgo ♍</option><option>Libra ♎</option><option>Scorpio ♏</option>
+                <option>Sagittarius ♐</option><option>Capricorn ♑</option><option>Aquarius ♒</option><option>Pisces ♓</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <div style="text-align:center;font-size:1.4rem;margin-bottom:12px">💜</div>
+            <div class="field"><label>Doosre Insaan ka Naam</label><input id="cp-n2" type="text" placeholder="Unka naam…" maxlength="30"/></div>
+            <div class="field"><label>Date of Birth</label><input id="cp-d2" type="date"/></div>
+            <div class="field"><label>Rashi (optional)</label>
+              <select id="cp-z2"><option value="">Auto-detect</option>
+                <option>Aries ♈</option><option>Taurus ♉</option><option>Gemini ♊</option><option>Cancer ♋</option>
+                <option>Leo ♌</option><option>Virgo ♍</option><option>Libra ♎</option><option>Scorpio ♏</option>
+                <option>Sagittarius ♐</option><option>Capricorn ♑</option><option>Aquarius ♒</option><option>Pisces ♓</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-rose" onclick="runCompat()" style="margin-top:8px">💑 &nbsp;Humara Love Match Batao!</button>
+      </div>
+
+      <div class="loading" id="cp-loading">
+        <div class="spin-orb"></div>
+        <div class="load-txt" id="cp-load-txt">Tumhara Pyaar ka Raaz Dhundh rahe hain…</div>
+      </div>
+
+      <div class="compat-result" id="cp-result">
+        <div class="names-vs">
+          <div class="name-tag" id="cp-r-n1"></div>
+          <div class="vs-badge">💗</div>
+          <div class="name-tag" id="cp-r-n2"></div>
+        </div>
+
+        <div class="compat-score-wrap">
+          <div class="compat-circle">
+            <div class="compat-pct" id="cp-pct"></div>
+            <div class="compat-pct-label">MATCH</div>
+          </div>
+          <div class="compat-verdict" id="cp-verdict"></div>
+          <div class="compat-verdict-sub" id="cp-verdict-sub"></div>
+        </div>
+
+        <div class="compat-bars" id="cp-bars"></div>
+
+        <div class="pred-block"><div class="pred-label" style="color:rgba(192,64,106,0.7)">💗 Tumhari Love Story</div><div class="pred-text" id="cp-story"></div></div>
+        <div class="pred-block"><div class="pred-label" style="color:rgba(192,64,106,0.7)">⚡ In Baaton ka Dhyan Rakhna</div><div class="pred-text" id="cp-challenge"></div></div>
+        <div class="pred-block"><div class="pred-label" style="color:rgba(192,64,106,0.7)">🌟 Saath Milke Kya Ban Sakte Ho</div><div class="pred-text" id="cp-power"></div></div>
+
+        <button class="btn btn-rose" onclick="shareCompat()" style="margin-top:8px">📤 &nbsp;Doston ko Dikhao!</button>
+        <button class="btn btn-outline" onclick="cpReset()">← Kisi Aur ko Try Karo</button>
+        <p style="text-align:center;font-size:.75rem;font-style:italic;color:rgba(255,251,230,0.25);margin-top:14px">Sirf Timepass · Pyaar toh Dil se hota hai 💗</p>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+// ── STARFIELD ──
+const sf = document.getElementById('starfield');
+for(let i=0;i<200;i++){
+  const s=document.createElement('div'); s.className='star';
+  const sz=Math.random()*2.5+0.5;
+  s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${(Math.random()*3+2).toFixed(1)}s;--delay:${(Math.random()*5).toFixed(1)}s;--min-o:${(Math.random()*0.25+0.05).toFixed(2)}`;
+  sf.appendChild(s);
+}
+
+// ── TABS ──
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['future','horoscope','compat'][i]===tab));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+}
+
+// ── LOADING MESSAGES ──
+const loadMsgs = ['Cosmic Oracle se pooch rahe hain…','Sitaare align ho rahe hain tumhare liye…','Tumhara Karma read kar rahe hain…','Soul vibration decode ho rahi hai…','Universe bol raha hai, suno…'];
+function startLoadMsg(elId){
+  let i=0;
+  const el=document.getElementById(elId);
+  if(el) el.textContent=loadMsgs[0];
+  return setInterval(()=>{
+    i=(i+1)%loadMsgs.length;
+    if(!el) return;
+    el.style.opacity=0;
+    setTimeout(()=>{el.textContent=loadMsgs[i];el.style.opacity=1;el.style.transition='opacity .4s';},300);
+  },1900);
+}
+
+// ── ZODIAC HELPER ──
+const ZODIACS = [
+  {sign:'Aries',emoji:'♈',dates:'Mar 21 – Apr 19'},{sign:'Taurus',emoji:'♉',dates:'Apr 20 – May 20'},
+  {sign:'Gemini',emoji:'♊',dates:'May 21 – Jun 20'},{sign:'Cancer',emoji:'♋',dates:'Jun 21 – Jul 22'},
+  {sign:'Leo',emoji:'♌',dates:'Jul 23 – Aug 22'},{sign:'Virgo',emoji:'♍',dates:'Aug 23 – Sep 22'},
+  {sign:'Libra',emoji:'♎',dates:'Sep 23 – Oct 22'},{sign:'Scorpio',emoji:'♏',dates:'Oct 23 – Nov 21'},
+  {sign:'Sagittarius',emoji:'♐',dates:'Nov 22 – Dec 21'},{sign:'Capricorn',emoji:'♑',dates:'Dec 22 – Jan 19'},
+  {sign:'Aquarius',emoji:'♒',dates:'Jan 20 – Feb 18'},{sign:'Pisces',emoji:'♓',dates:'Feb 19 – Mar 20'}
+];
+function getZodiacFromDate(m,d){
+  const cuts=[[1,20,'Capricorn'],[2,19,'Aquarius'],[3,20,'Pisces'],[4,20,'Aries'],[5,21,'Taurus'],[6,21,'Gemini'],[7,23,'Cancer'],[8,23,'Leo'],[9,23,'Virgo'],[10,23,'Libra'],[11,22,'Scorpio'],[12,22,'Sagittarius'],[12,31,'Capricorn']];
+  for(const [sm,sd,name] of cuts){if(m<sm||(m===sm&&d<=sd))return name;}
+  return 'Capricorn';
+}
+
+// ══════════════════════════════════════════
+//  FUTURE PREDICTOR
+// ══════════════════════════════════════════
+function fpGo2(){
+  const name=document.getElementById('fp-name').value.trim();
+  const dob=document.getElementById('fp-dob').value;
+  if(!name||!dob){alert('Please enter your name and date of birth.');return;}
+  document.getElementById('fp-s1').style.display='none';
+  document.getElementById('fp-s2').style.display='block';
+}
+function fpBack1(){
+  document.getElementById('fp-s2').style.display='none';
+  document.getElementById('fp-s1').style.display='block';
+}
+function fpGo3(){
+  const q1=document.getElementById('fp-q1').value;
+  const q2=document.getElementById('fp-q2').value;
+  const q3=document.getElementById('fp-q3').value;
+  if(!q1||!q2||!q3){alert('Please answer all three questions.');return;}
+  document.getElementById('fp-s2').style.display='none';
+  document.getElementById('fp-s3').style.display='block';
+  runFuturePrediction();
+}
+function fpReset(){
+  document.getElementById('fp-s3').style.display='none';
+  document.getElementById('fp-loading').className='loading show';
+  document.getElementById('fp-result').className='result';
+  ['fp-name','fp-dob'].forEach(id=>document.getElementById(id).value='');
+  ['fp-gender','fp-q1','fp-q2','fp-q3'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fp-s1').style.display='block';
+}
+
+async function runFuturePrediction(){
+  document.getElementById('fp-loading').className='loading show';
+  document.getElementById('fp-result').className='result';
+  const timer=startLoadMsg('fp-load-txt');
+
+  const name=document.getElementById('fp-name').value.trim();
+  const dob=document.getElementById('fp-dob').value;
+  const gender=document.getElementById('fp-gender').value||'person';
+  const dream=document.getElementById('fp-q1').value;
+  const element=document.getElementById('fp-q2').value;
+  const challenge=document.getElementById('fp-q3').value;
+  const bd=new Date(dob);
+  const age=Math.floor((new Date()-bd)/(365.25*24*3600*1000));
+  const zodiac=getZodiacFromDate(bd.getMonth()+1,bd.getDate());
+  const digits=dob.replace(/\D/g,'').split('').reduce((a,b)=>a+ +b,0);
+  const lifeNum=digits>9?String(digits).split('').reduce((a,b)=>a+ +b,0):digits;
+
+  const prompt=`You are a mystical AI oracle. Generate a fun dramatic personalized future prediction. Write ALL predictions in Hinglish (Hindi-English mix), like "Tera career next 6 months mein boom karega!" Use casual Hinglish tone throughout.
+Name:${name} | Age:${age} | Gender:${gender} | Zodiac:${zodiac} | Life Path Number:${lifeNum}
+Dream:${dream} | Element:${element} | Challenge:${challenge}
+
+Reply ONLY with valid JSON (no markdown):
+{"lifePath":"2-3 sentences about overall destiny","career":"2-3 sentences career/money next 1-3 years","love":"2-3 sentences love life","warning":"1-2 sentence cosmic warning","luckyNumber":"1-99","luckyColor":"one color","luckyDay":"day of week","powerWord":"one destiny word","rating":"1-5"}`;
+
+  try{
+    const r=await fetch("/api/predict",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:prompt}]})});
+    const d=await r.json();
+    const txt=d.content.map(i=>i.text||'').join('');
+    const pred=JSON.parse(txt.replace(/```json|```/g,'').trim());
+    clearInterval(timer); showFutureResult(name,pred);
+  }catch(e){
+    clearInterval(timer);
+    showFutureResult(name,{lifePath:"The stars reveal a profound journey ahead. Your soul carries ancient wisdom that is about to awaken in ways you cannot yet imagine.",career:"A powerful financial opportunity approaches within the next 6 months. Your unique talents are about to be recognized by someone with the power to change your trajectory.",love:"A deep and meaningful connection is written in your stars. The coming months will bring emotional intimacy that will shake your very foundation.",warning:"Beware of those who smile too quickly. Not everyone celebrating your rise was there during your struggle.",luckyNumber:String(lifeNum*7%99+1),luckyColor:['Midnight Blue','Crimson','Emerald','Gold','Violet'][lifeNum%5],luckyDay:['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][lifeNum%7],powerWord:['Transcendence','Abundance','Awakening','Victory','Radiance'][lifeNum%5],rating:String((lifeNum%3)+3)});
+  }
+}
+
+function showFutureResult(name,p){
+  document.getElementById('fp-loading').className='loading';
+  document.getElementById('fp-r-name').textContent=name.toUpperCase();
+  document.getElementById('fp-r-life').textContent=p.lifePath;
+  document.getElementById('fp-r-career').textContent=p.career;
+  document.getElementById('fp-r-love').textContent=p.love;
+  document.getElementById('fp-r-warn').textContent=p.warning;
+  const rating=parseInt(p.rating)||4;
+  const sr=document.getElementById('fp-stars'); sr.innerHTML='';
+  for(let i=0;i<5;i++){const sp=document.createElement('span');sp.textContent=i<rating?'⭐':'✦';sp.style.animationDelay=(i*.12)+'s';sr.appendChild(sp);}
+  document.getElementById('fp-lucky').innerHTML=`
+    <div class="lucky-card"><span class="le">🔢</span><span class="ll">Lucky Number</span><span class="lv">${p.luckyNumber}</span></div>
+    <div class="lucky-card"><span class="le">🎨</span><span class="ll">Lucky Color</span><span class="lv">${p.luckyColor}</span></div>
+    <div class="lucky-card"><span class="le">📅</span><span class="ll">Lucky Din</span><span class="lv">${p.luckyDay}</span></div>
+    <div class="lucky-card"><span class="le">⚡</span><span class="ll">Destiny Shabd</span><span class="lv">${p.powerWord}</span></div>`;
+  document.getElementById('fp-result').className='result show';
+}
+
+function shareResult(){
+  const name=document.getElementById('fp-name').value.trim();
+  const text=`🔮 Maine apna AI Future Prediction dekha!\n✨ ${name} ka Destiny reveal ho gaya...\n🔮 Try karo Oracle AI — mind-blowing hai yaar!`;
+  navigator.share?navigator.share({title:'My Oracle AI Prediction',text}):navigator.clipboard.writeText(text).then(()=>alert('Copied! Share with friends 🔮'));
+}
+
+// ══════════════════════════════════════════
+//  DAILY HOROSCOPE
+// ══════════════════════════════════════════
+const zodiacGrid=document.getElementById('zodiac-grid');
+ZODIACS.forEach(z=>{
+  const btn=document.createElement('button');
+  btn.className='zodiac-btn';
+  btn.innerHTML=`<span class="zs">${z.emoji}</span>${z.sign}`;
+  btn.onclick=()=>loadHoroscope(z,btn);
+  zodiacGrid.appendChild(btn);
+});
+
+let horoTimer=null;
+async function loadHoroscope(z,btn){
+  document.querySelectorAll('.zodiac-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('horo-result').className='horo-result';
+  document.getElementById('horo-loading').className='loading show';
+  horoTimer=startLoadMsg('horo-load-txt');
+
+  const today=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const prompt=`You are a mystical astrologer. Give a daily horoscope for ${z.sign} for ${today}.
+Reply ONLY with valid JSON (no markdown):
+{"today":"2-3 sentence daily reading in Hinglish (Hindi-English mix, e.g. Aaj tera din bahut lucky hai! Stars are totally aligned for you!)","advice":"1-2 sentence actionable advice in Hinglish","luckyNumber":"1-99","luckyColor":"one color","luckyGem":"one gemstone","love":85,"career":72,"health":90,"energy":65}
+(love/career/health/energy are scores 1-100)`;
+
+  try{
+    const r=await fetch("/api/predict",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:prompt}]})});
+    const d=await r.json();
+    const txt=d.content.map(i=>i.text||'').join('');
+    const h=JSON.parse(txt.replace(/```json|```/g,'').trim());
+    clearInterval(horoTimer); showHoroscope(z,h);
+  }catch(e){
+    clearInterval(horoTimer);
+    showHoroscope(z,{today:"The celestial bodies align in your favor today. Ancient energies awaken within you, pointing toward a breakthrough that has been long in the making. Trust the cosmic timing.",advice:"Step boldly toward what scares you most today — the stars have cleared your path.",luckyNumber:String(ZODIACS.indexOf(z)*7%99+11),luckyColor:'Amethyst',luckyGem:'Moonstone',love:78,career:85,health:72,energy:90});
+  }
+}
+
+function showHoroscope(z,h){
+  document.getElementById('horo-loading').className='loading';
+  document.getElementById('hr-emoji').textContent=z.emoji;
+  document.getElementById('hr-sign').textContent=z.sign;
+  document.getElementById('hr-date-range').textContent=z.dates;
+  document.getElementById('hr-today').textContent=h.today;
+  document.getElementById('hr-advice').textContent=h.advice;
+
+  const meters=[
+    {label:'Love',val:h.love,cls:'fill-rose'},
+    {label:'Career',val:h.career,cls:'fill-gold'},
+    {label:'Health',val:h.health,cls:'fill-teal'},
+    {label:'Energy',val:h.energy,cls:'fill-purple'}
+  ];
+  document.getElementById('hr-meters').innerHTML=meters.map(m=>`
+    <div class="horo-meter-card">
+      <div class="horo-meter-label">${m.label}</div>
+      <div class="horo-meter-bar"><div class="horo-meter-fill ${m.cls}" style="width:0%" data-w="${m.val}%"></div></div>
+      <div class="horo-meter-val">${m.val}%</div>
+    </div>`).join('');
+
+  setTimeout(()=>{document.querySelectorAll('.horo-meter-fill').forEach(el=>el.style.width=el.dataset.w);},100);
+
+  document.getElementById('hr-lucky').innerHTML=`
+    <div class="lucky-card"><span class="le">🔢</span><span class="ll">Lucky Number 🔢</span><span class="lv">${h.luckyNumber}</span></div>
+    <div class="lucky-card"><span class="le">🎨</span><span class="ll">Lucky Color</span><span class="lv">${h.luckyColor}</span></div>
+    <div class="lucky-card"><span class="le">💎</span><span class="ll">Lucky Ratan 💎</span><span class="lv">${h.luckyGem}</span></div>`;
+
+  document.getElementById('horo-result').className='horo-result show';
+}
+
+function resetHoro(){
+  document.getElementById('horo-result').className='horo-result';
+  document.querySelectorAll('.zodiac-btn').forEach(b=>b.classList.remove('selected'));
+}
+
+// ══════════════════════════════════════════
+//  COMPATIBILITY
+// ══════════════════════════════════════════
+let cpTimer=null;
+async function runCompat(){
+  const n1=document.getElementById('cp-n1').value.trim();
+  const n2=document.getElementById('cp-n2').value.trim();
+  const d1=document.getElementById('cp-d1').value;
+  const d2=document.getElementById('cp-d2').value;
+  if(!n1||!n2||!d1||!d2){alert('Please fill in both names and birthdates.');return;}
+
+  document.getElementById('cp-form').style.display='none';
+  document.getElementById('cp-result').className='compat-result';
+  document.getElementById('cp-loading').className='loading show';
+  cpTimer=startLoadMsg('cp-load-txt');
+
+  const bd1=new Date(d1), bd2=new Date(d2);
+  const z1=document.getElementById('cp-z1').value||getZodiacFromDate(bd1.getMonth()+1,bd1.getDate());
+  const z2=document.getElementById('cp-z2').value||getZodiacFromDate(bd2.getMonth()+1,bd2.getDate());
+
+  const prompt=`You are a cosmic love compatibility oracle. Analyze the romantic compatibility between:
+Person 1: ${n1}, born ${d1}, Zodiac: ${z1}
+Person 2: ${n2}, born ${d2}, Zodiac: ${z2}
+
+Reply ONLY with valid JSON (no markdown):
+{"score":82,"verdict":"Perfect Match!","verdictSub":"Tum dono ek dusre ke liye bane ho","story":"2-3 sentences about their love story in Hinglish (mix Hindi and English naturally)","challenge":"1-2 sentences about challenges in Hinglish","power":"1-2 sentences about their strength together in Hinglish","love":88,"trust":75,"communication":92,"passion":85}
+(score and dimension scores 1-100, verdict should be creative label)`;
+
+  try{
+    const r=await fetch("/api/predict",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:prompt}]})});
+    const d=await r.json();
+    const txt=d.content.map(i=>i.text||'').join('');
+    const c=JSON.parse(txt.replace(/```json|```/g,'').trim());
+    clearInterval(cpTimer); showCompat(n1,n2,c);
+  }catch(e){
+    clearInterval(cpTimer);
+    const seed=(n1.length+n2.length)*7%40+60;
+    showCompat(n1,n2,{score:seed,verdict:"Cosmic Mirrors",verdictSub:"Two souls reflecting each other's deepest truth",story:"Your connection transcends ordinary understanding. The universe conspired across time and space to bring these two souls together at exactly this moment.",challenge:"You must both learn to give space as freely as you give love. Independence will only strengthen your bond.",power:"Together you unlock each other's highest potential. No dream is too impossible when you face it side by side.",love:seed+5,trust:seed-8,communication:seed+12,passion:seed+3});
+  }
+}
+
+function showCompat(n1,n2,c){
+  document.getElementById('cp-loading').className='loading';
+  document.getElementById('cp-r-n1').textContent=n1;
+  document.getElementById('cp-r-n2').textContent=n2;
+  document.getElementById('cp-pct').textContent=c.score+'%';
+  document.getElementById('cp-verdict').textContent=c.verdict;
+  document.getElementById('cp-verdict-sub').textContent=c.verdictSub;
+  document.getElementById('cp-story').textContent=c.story;
+  document.getElementById('cp-challenge').textContent=c.challenge;
+  document.getElementById('cp-power').textContent=c.power;
+
+  const bars=[{label:'Love',val:c.love},{label:'Trust',val:c.trust},{label:'Communication',val:c.communication},{label:'Passion',val:c.passion}];
+  document.getElementById('cp-bars').innerHTML=bars.map(b=>`
+    <div class="cbar-row">
+      <div class="cbar-label">${b.label}</div>
+      <div class="cbar-track"><div class="cbar-fill" style="width:0%" data-w="${Math.min(b.val,100)}%"></div></div>
+      <div class="cbar-pct">${Math.min(b.val,100)}%</div>
+    </div>`).join('');
+
+  setTimeout(()=>{document.querySelectorAll('.cbar-fill').forEach(el=>el.style.width=el.dataset.w);},100);
+  document.getElementById('cp-result').className='compat-result show';
+}
+
+function cpReset(){
+  document.getElementById('cp-result').className='compat-result';
+  document.getElementById('cp-loading').className='loading';
+  document.getElementById('cp-form').style.display='block';
+  ['cp-n1','cp-n2','cp-d1','cp-d2'].forEach(id=>document.getElementById(id).value='');
+  ['cp-z1','cp-z2'].forEach(id=>document.getElementById(id).value='');
+}
+
+function shareCompat(){
+  const n1=document.getElementById('cp-r-n1').textContent;
+  const n2=document.getElementById('cp-r-n2').textContent;
+  const pct=document.getElementById('cp-pct').textContent;
+  const text=`💑 ${n1} aur ${n2} ka ${pct} Love Match hai!\n🔮 Oracle AI ne bata diya! Tum bhi check karo apna love match!`;
+  navigator.share?navigator.share({title:'Our Cosmic Compatibility',text}):navigator.clipboard.writeText(text).then(()=>alert('Copied! Share with your partner 💗'));
+}
+</script>
+</body>
+</html>
